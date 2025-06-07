@@ -7,16 +7,28 @@ exports.userMiddleware = void 0;
 const config_1 = require("./config");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userMiddleware = (req, res, next) => {
-    const header = req.headers["authorization"];
-    const decoded = jsonwebtoken_1.default.verify(header, config_1.JWT_PASSWORD);
-    if (decoded) {
-        // @ts-ignore
+    const authHeader = req.headers["authorization"];
+    console.log("Authorization Header:", authHeader);
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        console.log("Invalid token or missing authorization header");
+        res.status(401).json({
+            message: "Authorization header is missing or malformed"
+        });
+        return;
+    }
+    const token = authHeader.split(" ")[1];
+    console.log("Extracted token:", token);
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, config_1.JWT_PASSWORD);
+        console.log("Decoded JWT:", decoded);
+        //@ts-ignore
         req.userId = decoded.id;
         next();
     }
-    else {
+    catch (e) {
+        console.error("Error verifying JWT:", e);
         res.status(403).json({
-            message: "You are not logged in"
+            message: "Invalid token or expired"
         });
     }
 };

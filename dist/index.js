@@ -66,7 +66,6 @@ app.post("/api/v1/content", middleware_1.userMiddleware, (req, res) => __awaiter
     yield db_1.ContentModel.create({
         link,
         type,
-        // @ts-ignore
         userId: req.userId,
         tags: []
     });

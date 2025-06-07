@@ -32,10 +32,18 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContentModel = exports.UserModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-mongoose_1.default.connect("mongodb+srv://manas272004:manas123@cluster0.ehc3al8.mongodb.net/Brainly");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const DATABASE_URL = process.env.DATABASE_URL || "";
+mongoose_1.default.connect(DATABASE_URL)
+    .then(() => console.log("Connected to DB"))
+    .catch((err) => console.error("DB connection error:", err));
 const UserSchema = new mongoose_1.Schema({
     username: { type: String, unique: true },
     password: String

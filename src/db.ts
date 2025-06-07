@@ -1,5 +1,11 @@
 import mongoose, {model, Schema} from "mongoose";
-mongoose.connect("mongodb+srv://manas272004:manas123@cluster0.ehc3al8.mongodb.net/Brainly")
+import dotenv from "dotenv";
+dotenv.config();
+
+const DATABASE_URL = process.env.DATABASE_URL || "";
+mongoose.connect(DATABASE_URL)
+.then(() => console.log("Connected to DB"))
+.catch((err) => console.error("DB connection error:",err));
 
 const UserSchema = new Schema({
     username:{type: String, unique: true},

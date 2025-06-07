@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken";
 import { ContentModel, UserModel } from "./db";
 import { JWT_PASSWORD } from "./config";
 import { userMiddleware } from "./middleware";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express ();
 interface AuthRequest extends Request{

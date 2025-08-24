@@ -2,7 +2,6 @@ import Dashboard from "./pages/dashboard";
 import { Signin } from "./pages/signin";
 import { Signup } from "./pages/signup";
 import {
-  BrowserRouter as Router,
   Route,
   Routes,
   BrowserRouter,

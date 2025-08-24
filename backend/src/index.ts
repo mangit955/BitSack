@@ -156,4 +156,9 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.send("Backend is running ✅");
+});
+
+
 app.listen(3000);

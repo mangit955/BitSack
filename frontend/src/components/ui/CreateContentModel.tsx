@@ -12,7 +12,13 @@ const ContentType = {
 } as const;
 type ContentType = (typeof ContentType)[keyof typeof ContentType];
 
-export function CreateContentModel({ open, onClose }) {
+export function CreateContentModel({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   const titleRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
   const [type, setType] = useState<ContentType>(ContentType.Youtube);

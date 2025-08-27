@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { JWT_PASSWORD } from './config';
+
 import jwt from 'jsonwebtoken';
 
 export const userMiddleware = ( req: Request, res: Response, next: NextFunction ):void => {
@@ -19,7 +19,7 @@ export const userMiddleware = ( req: Request, res: Response, next: NextFunction 
     console.log("Extracted token:", token);
     
     try {
-        const decoded = jwt.verify(token, JWT_PASSWORD) as {id: string};
+        const decoded = jwt.verify(token, process.env.JWT_PASSWORD!) as {id: string};
 
         console.log("Decoded JWT:", decoded);
         //@ts-ignore

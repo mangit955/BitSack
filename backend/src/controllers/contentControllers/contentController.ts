@@ -37,7 +37,7 @@ export const getContent: RequestHandler = async (req: Request, res: Response) =>
   const userId = req.userId;
   const content = await ContentModel.find({
     userId: userId,
-  }).populate("userId", "username");
+  }).populate("userId", "name");
   res.json({
     content,
   });

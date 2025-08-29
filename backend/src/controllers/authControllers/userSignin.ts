@@ -3,44 +3,43 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Request, RequestHandler, Response } from "express";
 
-export const userSignin: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+export const userSignin: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+   console.log("Signin request received:", req.body);
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const existingUser = await UserModel.findOne({ username });
+    // Check if user exists
+    const existingUser = await UserModel.findOne({ email });
     if (!existingUser) {
-      res.status(411).json({
-        message: "User not found!",
-      });
+      res.status(404).json({ message: "User not found!" });
       return;
     }
 
-    //compared password
     if (!existingUser.password) {
-      res.status(411).json({
-        message: "Invalid Credentials!",
-      });
+      res.status(401).json({ message: "Invalid credentials!" });
       return;
     }
-    const isPassswordValid = await bcrypt.compare(
+
+    const isPasswordValid = await bcrypt.compare(
       password,
       existingUser.password
     );
-    if (!isPassswordValid) {
-      res.status(411).json({
-        message: "Invalid Credentials!",
-      });
+    if (!isPasswordValid) {
+      res.status(401).json({ message: "Invalid credentials!" });
       return;
     }
 
-    //Sign with JWT
-
+    // Generate JWT token
     const token = jwt.sign(
       { id: existingUser._id },
-      process.env.JWT_PASSWORD || "default_seceret",
+      process.env.JWT_PASSWORD || "default_secret",
       { expiresIn: "1h" }
     );
-    res.json({ token });
+
+    res.status(200).json({ token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went wrong!" });

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import Button2 from "../components/ui/Buttton2";
@@ -101,9 +101,9 @@ export default function Signin() {
 
         <p className="mt-4 text-sm text-gray-500 text-center">
           Don’t have an account?{" "}
-          <a href="/signup" className="text-black font-medium">
+          <Link to="/signup" className="text-black font-medium">
             Create one
-          </a>
+          </Link>
         </p>
       </div>
     </div>

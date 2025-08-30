@@ -4,7 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Button2 from "../components/ui/Buttton2";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import bg4 from "../assets/bg4.jpg";
 import profileImg from "../assets/profile.png";
 import barGraph from "../assets/bargraph.png";
@@ -65,16 +65,15 @@ export default function Signup() {
           email: emailRef.current?.value,
           password: passwordRef.current?.value,
         },
-        
+
         {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
-      
-    
+
       navigate("/signin");
     } catch (err: any) {
       console.error(err);
@@ -192,9 +191,9 @@ export default function Signup() {
 
             <p className="mt-4 text-sm text-gray-500 text-center">
               Already have an account?{" "}
-              <a href="/signin" className="text-black font-medium">
+              <Link to="/signin" className="text-black font-medium">
                 Login Here
-              </a>
+              </Link>
             </p>
           </div>
         </div>

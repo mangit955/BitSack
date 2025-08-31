@@ -30,8 +30,8 @@ export default function Signin() {
         }
       );
       navigate("/dashboard"); // redirect after login
-    } catch (err: any) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setError("Invalid email or password. Please try again.");
     }
   }

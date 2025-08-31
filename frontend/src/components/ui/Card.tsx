@@ -1,49 +1,86 @@
+import { useEffect } from "react";
 import { ShareIcon } from "../../icons/Shareicon";
+import { ExternalLink, Trash2 } from "lucide-react";
 
 interface CardProps {
   title: string;
   link: string;
   type: "twitter" | "youtube";
 }
+
+declare global {
+  interface Window {
+    twttr?: {
+      widgets: {
+        load: (element?: HTMLElement) => void;
+      };
+    };
+  }
+}
+
+// Extract YouTube video ID
+function extractYouTubeId(url: string) {
+  const regex =
+    /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
+  const match = url.match(regex);
+  return match ? match[1] : "";
+}
+
 export function Card({ title, link, type }: CardProps) {
+  // Load Twitter embed script dynamically
+  useEffect(() => {
+    if (type === "twitter" && window.twttr) {
+      window.twttr.widgets.load();
+    }
+  }, [type, link]);
+
   return (
-    <div className="bg-white rounded-md border-gray-200 p-4 max-w-72 border min-h-48 min-w-72 shadow-2xl hover:shadow-lg transition-all duration-150">
-      <div className="flex justify-between">
-        <div className="flex items-center text-base">
-          <div className="text-gray-500 pr-2">
-            <ShareIcon size="md" />
-          </div>
-          {title}
+    <div className="flex flex-col h-48 w-full md:w-72 bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-200">
+      {/* Card Header */}
+      <div className="flex justify-between items-center p-3 border-b border-gray-200">
+        <div className="flex items-center gap-2 text-gray-800 font-medium text-sm md:text-base">
+          <ShareIcon size="md" />
+          <span className="truncate">{title}</span>
         </div>
-        <div className="flex items-center">
-          <div className="pr-2 text-gray-500 ">
-            <a href={link} target="_blank">
-              <ShareIcon size="md" />
-            </a>
-          </div>
-          <div className="pr-2 text-gray-500">
-            <ShareIcon size="md" />
-          </div>
+
+        {/* Action buttons */}
+        <div className="flex items-center gap-2 text-gray-500">
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-600 transition-colors"
+            title="Open in new tab"
+          >
+            <ExternalLink size={18} />
+          </a>
+          <button
+            className="hover:text-red-500 transition-colors"
+            title="Remove card"
+            onClick={() => console.log("Delete clicked")}
+          >
+            <Trash2 size={18} />
+          </button>
         </div>
       </div>
 
-      <div className="pt-4">
+      {/* Card Body */}
+      <div className="flex-1 p-3 overflow-hidden">
         {type === "youtube" && (
           <iframe
-            className="w-full"
-            src={link.replace("watch", "embed").replace("?v=", "/")}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
+            className="w-full h-full rounded-md"
+            src={`https://www.youtube.com/embed/${extractYouTubeId(link)}`}
+            title="YouTube video preview"
             allowFullScreen
-          ></iframe>
+          />
         )}
 
         {type === "twitter" && (
-          <blockquote className="twitter-tweet">
-            <a href={link.replace("x.com", "twitter.com")}></a>
-          </blockquote>
+          <div className="h-full overflow-y-auto">
+            <blockquote className="twitter-tweet">
+              <a href={link}></a>
+            </blockquote>
+          </div>
         )}
       </div>
     </div>

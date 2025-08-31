@@ -75,8 +75,8 @@ export default function Signup() {
       );
 
       navigate("/signin");
-    } catch (err: any) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setErrorMessage("Signup failed. Please try again.");
     }
   }

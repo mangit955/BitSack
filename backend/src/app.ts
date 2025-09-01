@@ -9,7 +9,14 @@ const allowedOrigins = (process.env.CORS_ORIGIN || "").split(",");
 
 app.use(
   cors({
-    origin: ["http://localhost:4000", "https://bitsack.onrender.com"],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+
     credentials: true,
   })
 );

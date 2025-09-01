@@ -7,7 +7,8 @@ export const userSignin: RequestHandler = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-   console.log("Signin request received:", req.body);
+  console.log("Signin request received:", req.body);
+
   try {
     const { email, password } = req.body;
 
@@ -23,6 +24,7 @@ export const userSignin: RequestHandler = async (
       return;
     }
 
+    // Compare password
     const isPasswordValid = await bcrypt.compare(
       password,
       existingUser.password
@@ -34,14 +36,14 @@ export const userSignin: RequestHandler = async (
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: existingUser._id },
-      process.env.JWT_PASSWORD || "default_secret",
+      { id: existingUser._id, email: existingUser.email },
+      process.env.JWT_SECRET || "default_secret", // ✅ use same key everywhere
       { expiresIn: "1h" }
     );
 
     res.status(200).json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Signin error:", err);
     res.status(500).json({ message: "Something went wrong!" });
   }
 };

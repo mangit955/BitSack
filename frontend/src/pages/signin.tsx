@@ -18,7 +18,7 @@ export default function Signin() {
     setError("");
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${BACKEND_URL}/api/v1/signin`,
         {
           email: emailRef.current?.value,
@@ -29,7 +29,12 @@ export default function Signin() {
           withCredentials: true,
         }
       );
-      navigate("/dashboard"); // redirect after login
+      if (response.data?.token) {
+        localStorage.setItem("token", response.data.token);
+        navigate("/dashboard"); // redirect after login
+      } else {
+        setError("No token received from server.");
+      }
     } catch (error) {
       console.error(error);
       setError("Invalid email or password. Please try again.");

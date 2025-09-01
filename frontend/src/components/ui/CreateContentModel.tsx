@@ -28,7 +28,7 @@ export function CreateContentModel({
     const link = linkRef.current?.value;
 
     await axios.post(
-      BACKEND_URL + "/api/v1/Content",
+      BACKEND_URL + "/api/v1/content",
       {
         link,
         type,

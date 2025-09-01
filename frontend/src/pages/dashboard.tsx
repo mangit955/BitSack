@@ -21,6 +21,8 @@ import { useContent } from "../hooks/useContent";
 import { BACKEND_URL } from "../config";
 import logo2 from "../assets/logo2.png";
 import pp1 from "../assets/pp1.jpeg";
+import Player from "lottie-react";
+import emptyAnimation from "../assets/animations/box.json"; // adjust path
 
 interface ContentItem {
   type: string;
@@ -178,14 +180,14 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Cards */}
+          {/* Content wrapper */}
           <div
             className={`transition ${
               isModalOpen ? "blur-sm pointer-events-none" : ""
             }`}
           >
-            <div className=" relative bg-neutral-100 rounded-xl shadow-md p-4 w-full h-full flex flex-col">
-              {/* Top buttons aligned to the right */}
+            <div className="relative bg-neutral-100 rounded-xl shadow-md p-4 w-full h-full flex flex-col">
+              {/* Top buttons */}
               <div className="flex justify-end gap-2 mb-4">
                 <Button
                   onClick={() => setIsModalOpen(true)}
@@ -203,22 +205,33 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* Grid of cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {contents
-                  .filter(
-                    ({ type }) => type === "twitter" || type === "youtube"
-                  )
-                  .map(({ type, link, title }) => (
-                    <div key={link}>
-                      <Card
-                        type={type as "twitter" | "youtube"}
-                        link={link}
-                        title={title}
-                      />
-                    </div>
-                  ))}
-              </div>
+              {/* Show Lottie when no content */}
+              {contents.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <Player
+                    autoplay
+                    loop
+                    animationData={emptyAnimation}
+                    style={{ height: "250px", width: "250px" }}
+                  />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {contents
+                    .filter(
+                      ({ type }) => type === "twitter" || type === "youtube"
+                    )
+                    .map(({ type, link, title }) => (
+                      <div key={link}>
+                        <Card
+                          type={type as "twitter" | "youtube"}
+                          link={link}
+                          title={title}
+                        />
+                      </div>
+                    ))}
+                </div>
+              )}
             </div>
           </div>
         </main>

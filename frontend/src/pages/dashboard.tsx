@@ -53,7 +53,7 @@ export default function Dashboard() {
           },
         }
       );
-      const shareUrl = `http://localhost:5173/share/${response.data.hash}`;
+      const shareUrl = `${BACKEND_URL}/share/${response.data.hash}`;
       alert(`Your brain is shared at: ${shareUrl}`);
     } catch (error) {
       console.error("Error sharing brain:", error);
@@ -88,7 +88,7 @@ export default function Dashboard() {
             className="w-16 h-16 rounded-full"
           />
           {/* Text */}
-          <span className="font-bold text-lg text-black/70">LINKSTACK</span>
+          <span className="font-bold text-lg text-black/70">BitSACK</span>
         </div>
 
         <nav className="flex-1 px-4 space-y-2">

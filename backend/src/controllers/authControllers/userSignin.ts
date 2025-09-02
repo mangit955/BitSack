@@ -36,9 +36,13 @@ export const userSignin: RequestHandler = async (
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: existingUser._id, email: existingUser.email },
+      {
+        id: existingUser._id,
+        name: existingUser.name,
+        email: existingUser.email,
+      },
       process.env.JWT_SECRET || "default_secret", // ✅ use same key everywhere
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
     res.status(200).json({ token });

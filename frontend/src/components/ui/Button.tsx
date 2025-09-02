@@ -15,7 +15,7 @@ interface ButtonProps {
 
 const variantStyles: Record<Variants, string> = {
   primary:
-    "bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-700 text-white shadow-md hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 transition-all duration-300",
+    "bg-gradient-to-r  text-white shadow-md hover:from-indigo-600 hover:via-indigo-700 hover:to-indigo-800 transition-all duration-300 bg-[url('/bubg1.jpeg')] bg-no-repeat bg-right bg-[length:200px_200px] ",
 
   secondary:
     " text-indigo-600 border border-indigo-600 shadow-md hover:bg-indigo-100 transition-all duration-300",

@@ -23,11 +23,18 @@ import logo2 from "../assets/logo2.png";
 import pp1 from "../assets/pp1.jpeg";
 import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/box.json"; // adjust path
+import { jwtDecode } from "jwt-decode";
 
 interface ContentItem {
   type: string;
   link: string;
   title: string;
+}
+interface TokenPayload {
+  userId: string;
+  name: string;
+  email: string;
+  exp: number;
 }
 
 export default function Dashboard() {
@@ -57,6 +64,18 @@ export default function Dashboard() {
     };
 
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode<TokenPayload>(token);
+        setUsername(decoded.name);
+      } catch (err) {
+        console.error("Failed to decode token:", err);
+      }
+    }
   }, []);
 
   // Detect the operating system to show the correct shortcut key
@@ -125,9 +144,12 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="flex h-screen bg-cover bg-center bg-no-repeat p-4">
+    <div
+      className="flex h-screen bg-no-repeat p-4 "
+      style={{ backgroundImage: "url('/mainbg.jpg')" }}
+    >
       {/* Sidebar */}
-      <aside className="w-64 bg-neutral-100 shadow-md flex flex-col rounded-xl">
+      <aside className="w-64 bg-white/60 backdrop-blur-lg border border-white/20 shadow-lg flex flex-col rounded-xl">
         <div className="p-6 flex items-center gap-3">
           {/* Logo Image */}
           <img
@@ -192,7 +214,7 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col pl-4">
         {/* Top Navbar */}
-        <header className="flex items-center justify-between bg-neutral-100 px-6 py-3 shadow-md rounded-xl pl-4">
+        <header className="flex items-center justify-between bg-white/60 backdrop-blur-lg border border-white/20 shadow-lg px-6 py-3 rounded-xl">
           {/* Enhanced Search Bar with Keyboard Shortcut */}
           <div className="flex items-center justify-between bg-white rounded-full px-3 py-2 w-1/3 shadow-sm border border-gray-200 hover:border-gray-300 transition-colors">
             <div className="flex items-center flex-1">
@@ -247,7 +269,7 @@ export default function Dashboard() {
               isModalOpen ? "blur-sm pointer-events-none" : ""
             }`}
           >
-            <div className="relative bg-neutral-100 rounded-xl shadow-md p-4 w-full h-full flex flex-col">
+            <div className="relative bg-white/60 backdrop-blur-lg border border-white/20 shadow-lg rounded-xl p-4 w-full h-full flex flex-col">
               {/* Top buttons */}
               <div className="flex justify-end gap-2 mb-4">
                 <Button

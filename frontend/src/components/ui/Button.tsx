@@ -28,7 +28,7 @@ const sizeStyles = {
 };
 
 const defaultStyles =
-  "rounded-md flex items-center cursor-pointer transition-all duration-200 hover:opacity-90 shadow-lg";
+  "rounded-full flex items-center cursor-pointer transition-all duration-200 hover:opacity-90 shadow-lg";
 
 export const Button = (props: ButtonProps) => {
   return (

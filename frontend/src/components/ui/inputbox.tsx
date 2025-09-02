@@ -1,6 +1,6 @@
 interface InputProps {
   placeholder: string;
-  ref?: any;
+  ref?: React.Ref<HTMLInputElement>;
 }
 export function Input({ placeholder, ref }: InputProps) {
   return (
@@ -8,7 +8,7 @@ export function Input({ placeholder, ref }: InputProps) {
       <input
         placeholder={placeholder}
         type={"text"}
-        className="text-white px-4 py-2 shadow-sm rounded m-2 hover:bg-[#00afa7]"
+        className="text-gray-600 px-4 py-2 shadow-sm border border-slate-300 rounded m-2 hover:bg-slate-200"
         ref={ref}
       ></input>
     </div>

@@ -48,7 +48,7 @@ export function CreateContentModel({
     <div>
       {open && (
         <div className="fixed inset-0">
-          <div className="absolute inset-0 bg-slate-700 opacity-60 " />
+          <div className="absolute inset-0 bg-slate-100 opacity-10 " />
           <div className="relative z-10 flex justify-center items-center h-full">
             <div className="flex flex-col justify-center">
               <span className="bg-white  p-4 rounded-xl shadow-xl w-full max-w-md   ">

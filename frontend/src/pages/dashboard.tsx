@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react"; // Added useRef
 import {
   Search,
   Bell,
   Settings,
-  ShoppingBag,
-  List,
-  MessageCircle,
+  Youtube,
+  Instagram,
+  Twitter,
   CreditCard,
   Users,
   HelpCircle,
-  Home,
+  LayoutDashboard,
   Share2,
   Plus,
 } from "lucide-react";
@@ -33,15 +33,61 @@ interface ContentItem {
 export default function Dashboard() {
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [username, setUsername] = useState<string>("");
+  const searchInputRef = useRef<HTMLInputElement>(null); // Added ref for search input
   const {
     contents,
     refresh,
   }: { contents: ContentItem[]; refresh: () => void } = useContent();
 
+  // Fetch logged-in user
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setUsername(response.data.name); // assuming backend returns { name: "..." }
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        setUsername("Guest"); // fallback
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // Detect the operating system to show the correct shortcut key
+  const isMac =
+    typeof window !== "undefined" &&
+    window.navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+  const shortcutKey = isMac ? "⌘" : "Ctrl";
+
   // Refresh when modal closes/opens
   useEffect(() => {
     refresh();
   }, [isModalOpen, refresh]);
+
+  // Keyboard shortcut functionality
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Handle Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+
+      // Handle Escape to unfocus
+      if (event.key === "Escape") {
+        searchInputRef.current?.blur();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   /** Handles brain sharing */
   const handleShare = async () => {
@@ -65,10 +111,10 @@ export default function Dashboard() {
 
   /** Sidebar items */
   const mainMenu = [
-    { label: "Dashboard", icon: Home },
-    { label: "Youtube", icon: ShoppingBag },
-    { label: "Instagram", icon: List },
-    { label: "X", icon: MessageCircle },
+    { label: "Dashboard", icon: LayoutDashboard },
+    { label: "Youtube", icon: Youtube },
+    { label: "Instagram", icon: Instagram },
+    { label: "Twitter", icon: Twitter },
   ];
 
   const secondaryMenu = [
@@ -106,9 +152,9 @@ export default function Dashboard() {
             >
               {/* Indigo left border indicator */}
               <div
-                className={`absolute left-0 top-0 h-full w-1 bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-700 rounded-r-full transition-all duration-300 ease-in-out ${
+                className={`absolute left-0 top-0 h-full w-1 bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-700 rounded-r-full  transition-all duration-300 ease-in-out ${
                   activeMenu === label
-                    ? "opacity-100 scale-y-100"
+                    ? "opacity-100 scale-y-100 "
                     : "opacity-0 scale-y-0"
                 }`}
               />
@@ -147,14 +193,24 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col pl-4">
         {/* Top Navbar */}
         <header className="flex items-center justify-between bg-neutral-100 px-6 py-3 shadow-md rounded-xl pl-4">
-          {/* Search Bar */}
-          <div className="flex items-center bg-white rounded-lg px-3 py-2 w-1/3 shadow-sm">
-            <Search size={18} className="text-gray-500 mr-2" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-transparent outline-none w-full text-sm"
-            />
+          {/* Enhanced Search Bar with Keyboard Shortcut */}
+          <div className="flex items-center justify-between bg-white rounded-full px-3 py-2 w-1/3 shadow-sm border border-gray-200 hover:border-gray-300 transition-colors">
+            <div className="flex items-center flex-1">
+              <Search size={22} className="text-gray-500 mr-2" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search..."
+                className="bg-transparent outline-none w-full text-sm"
+              />
+            </div>
+
+            {/* Keyboard shortcut indicator */}
+            <div className="flex items-center ml-2">
+              <kbd className="px-2 py-1 bg-gray-100 rounded-xl border border-gray-200 font-mono text-xs text-black/70">
+                {shortcutKey}K
+              </kbd>
+            </div>
           </div>
 
           {/* Action Buttons */}
@@ -162,8 +218,13 @@ export default function Dashboard() {
             <div className="p-2 bg-white rounded-full shadow-sm">
               <Bell size={20} className="text-gray-600 cursor-pointer" />
             </div>
-            <div className="flex items-center gap-4 rounded-full shadow-md">
+
+            {/* Profile section with name */}
+            <div className="flex items-center gap-3 bg-white px-3 py-2 rounded-full shadow-sm">
               <img src={pp1} alt="profile" className="w-8 h-8 rounded-full" />
+              <span className="text-sm font-medium text-gray-700">
+                {username || "Loading..."}
+              </span>
             </div>
           </div>
         </header>
